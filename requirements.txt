@@ -1,0 +1,37 @@
+Django==3.2.2
+django-cors-headers==3.11.0
+django-environ==0.8.1
+django-filter==21.1
+django-cleanup==6.0.0
+django-templated-mail==1.1.1
+django-cloudinary-storage==0.3.0
+django-celery-email==3.0.0
+django-celery-beat==2.2.1
+django-pickling==1.0
+django-redis==5.2.0
+git+https://github.com/GentleEnvy/django-cacheops  # ==6.0. https://github.com/Suor/django-cacheops/issues/31
+
+djangorestframework==3.13.1
+djangorestframework-simplejwt==5.1.0
+drf-base64==2.0
+drf_orjson_renderer==1.6.0
+drf-spectacular==0.20.2
+
+psycopg2-binary==2.9.3
+pybase64==1.2.1
+python-dateutil==2.8.2
+redis==4.2.2
+Pillow==9.1.0
+gunicorn==20.1.0
+whitenoise==6.0.0
+celery==5.0.2  # https://github.com/celery/celery/issues/6819
+gevent==21.12.0
+tzdata==2022.1
+
+# dev
+django-debug-toolbar==3.2.4
+
+# test
+parameterized==0.8.1
+freezegun==1.2.1
+factory_boy==3.2.1
