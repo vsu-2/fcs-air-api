@@ -1,21 +1,23 @@
+from django.contrib.auth import password_validation
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
 from django.core.mail import send_mail
 from django.db import models
 from django.utils import timezone
 
+from app.base.models.base import AbstractModel
 from app.users.managers import UserManager
 from app.users.models.choices import UserType
 
 __all__ = ['User']
 
 
-class User(AbstractBaseUser, PermissionsMixin):
+class User(AbstractModel, AbstractBaseUser, PermissionsMixin):
     type = models.PositiveSmallIntegerField(
         choices=UserType.choices, default=UserType.DEFAULT
     )
-    first_name = models.TextField(blank=True)
-    last_name = models.TextField(blank=True)
+    first_name = models.TextField(blank=True, null=True)
+    last_name = models.TextField(blank=True, null=True)
     email = models.EmailField(unique=True, null=False, blank=False)
     is_active = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
@@ -29,6 +31,12 @@ class User(AbstractBaseUser, PermissionsMixin):
     @property
     def is_staff(self):
         return self.is_superuser
+    
+    def save(self, *args, **kwargs):
+        AbstractModel.save(self, *args, **kwargs)
+        if self._password is not None:
+            password_validation.password_changed(self._password, self)
+            self._password = None
     
     def clean(self):
         super().clean()
