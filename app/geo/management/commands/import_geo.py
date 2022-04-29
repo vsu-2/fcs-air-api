@@ -69,16 +69,21 @@ class Command(BaseCommand):
         country_data: dict
         for i, country_data in enumerate(countries):
             _percentages('countries', i, len(countries))
-            _update_or_create(Country, country_data.pop('code'), country_data['name'])
+            _update_or_create(
+                Country, country_data.pop('code'), {'title': country_data['name']}
+            )
     
     def _import_cites(self):
         cities = self.service.cities()
         city_data: dict
         for i, city_data in enumerate(cities):
             _percentages('cities', i, len(cities))
+            if not city_data['name']:
+                continue
             country = Country.objects.get(code=city_data.pop('country_code'))
             _update_or_create(
-                City, city_data.pop('code'), city_data | {'country': country}
+                City, city_data.pop('code'),
+                {'title': city_data['name'], 'country': country}
             )
     
     def _import_airports(self):
@@ -86,11 +91,15 @@ class Command(BaseCommand):
         airport_data: dict
         for i, airport_data in enumerate(airports):
             _percentages('airports', i, len(airports))
+            if not airport_data['name']:
+                continue
             city_code = airport_data.pop('city_code')
             airport_code = airport_data.pop('code')
             try:
                 city = City.objects.get(code=city_code)
-                _update_or_create(Airport, airport_code, airport_data | {'city': city})
+                _update_or_create(
+                    Airport, airport_code, {'title': airport_data['name'], 'city': city}
+                )
             except City.DoesNotExist:
                 warnings.warn(
                     f'Для аэропорта {airport_data} с кодом {airport_code} указан '
@@ -102,4 +111,8 @@ class Command(BaseCommand):
         airline_data: dict
         for i, airline_data in enumerate(airlines):
             _percentages('airlines', i, len(airlines))
-            _update_or_create(Airline, airline_data.pop('code'), airline_data)
+            if not airline_data['name']:
+                continue
+            _update_or_create(
+                Airline, airline_data.pop('code'), {'title': airline_data['name']}
+            )
