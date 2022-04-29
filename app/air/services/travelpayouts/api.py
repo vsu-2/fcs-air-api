@@ -3,10 +3,7 @@ from urllib.parse import urlencode
 
 import requests
 from django.conf import settings
-from django.utils.translation import get_language
-from travelpayouts import Client
-from travelpayouts import common
-from travelpayouts import flights
+from travelpayouts import Client, common, flights
 
 from app.air.models.choices import FlightClassChoices
 from app.air.services.travelpayouts.types import *
@@ -23,7 +20,7 @@ class TravelpayoutsService(Client):
         full_url = url + '?' + urlencode(params) if params else url
         r = requests.post(full_url, headers=self.default_headers, json=json)
         if not r.ok:
-            raise CriticalError(r.json())
+            raise CriticalError(f'Travelpayouts API Error: {r.json()}')
         return r.json()
     
     def whereami(self, ip: str) -> WhereamiType:
@@ -58,42 +55,8 @@ class TravelpayoutsService(Client):
         while True:
             result = flights.search_results(self, search_id)
             results.extend(result)
-            if result[-1] == {'search_id': search_id}:
+            if not result or result[-1] == {'search_id': search_id}:
                 return results[:-1]
-            if not result:
-                raise CriticalError('search_results пустой')
     
-    def get_link(self, url, search_id):
+    def get_link(self, url: str, search_id: str) -> str:
         return flights.get_link(self, url, search_id)['url']
-    
-    def calendar(self, origin: str, destination: str) -> dict[str, CalendarType]:
-        result = self._get(
-            'https://api.travelpayouts.com/aviasales/v3/grouped_prices',
-            params={
-                'origin': origin, 'destination': destination,
-                'currency': 'rub', 'group_by': 'departure_at', 'limit': 1000
-            }
-        )
-        return result['data'] or {}
-    
-    def get_special_offers(
-        self, origin: str, destination: str
-    ) -> GetSpecialOffersResult | None:
-        try:
-            return sorted(
-                self._get(
-                    f'{self.BASE_URL}/aviasales/v3/get_special_offers', params={
-                        'locale': 'ru', 'origin': origin,
-                        'destination': destination, 'currency': 'rub'
-                    }
-                )['data'], key=lambda offer: offer['price']
-            )[0]
-        except IndexError:
-            return None
-    
-    def city_directions(self, origin: str) -> list[str]:
-        return list(
-            (self._get(
-                f'{self.BASE_URL}/v1/city-directions', params={'origin': origin}
-            )['data'] or {}).keys()
-        )
