@@ -101,7 +101,8 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     
     'app.base',
-    'app.users'
+    'app.users',
+    'app.geo'
 ]
 
 REST_FRAMEWORK = {
