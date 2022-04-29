@@ -35,7 +35,7 @@ class BaseViewTest(BaseTest):
         self._me = None
     
     def get(self, path=None, query=None):
-        return self.client.get(f'{path}?{urlencode(query or {})}')
+        return self.client.get(f'{path or self.path}?{urlencode(query or {})}')
     
     def post(self, path=None, data=None):
         return self.client.post(path or self.path, data)

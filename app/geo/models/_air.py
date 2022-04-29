@@ -1,6 +1,6 @@
 from django.db import models
 
-from app.geo.models._places import City
+from app.geo.models._locations import City
 from app.geo.models.base import _AbstractGeoModel
 
 
