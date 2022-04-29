@@ -48,7 +48,8 @@ env = environ.Env(
     }),
     LOG_LEVEL=(dict, {}),
     CELERY_REDIS_MAX_CONNECTIONS=(int, 10),
-    ADMINS=(_env_value, {})
+    ADMINS=(_env_value, {}),
+    TRAVELPAYOUTS_MARKER=int
 )
 
 # root
@@ -329,3 +330,8 @@ USE_I18N = True
 TIME_ZONE = 'UTC'
 USE_L10N = True
 USE_TZ = True
+
+# travelpayouts
+
+TRAVELPAYOUTS_TOKEN = env('TRAVELPAYOUTS_TOKEN')
+TRAVELPAYOUTS_MARKER = env('TRAVELPAYOUTS_MARKER')
