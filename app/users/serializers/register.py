@@ -37,7 +37,7 @@ class PostUsersRegisterSerializer(SerializerSchemaMixin, serializers.ModelSerial
         return attrs
     
     def create(self, validated_data):
-        self.instance = User.objects.create_user(**validated_data)
+        self.instance = User.objects.create_user(**validated_data, is_active=False)
         return self.instance
 
 

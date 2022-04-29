@@ -12,4 +12,4 @@ class AbstractModel(models.Model):
     ):
         if clean:
             self.full_clean(exclude=clean_exclude)
-        super().save(force_insert, force_update, using, update_fields)
+        models.Model.save(self, force_insert, force_update, using, update_fields)
