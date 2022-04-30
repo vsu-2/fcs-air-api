@@ -97,4 +97,5 @@ class IntegerChoices(_IntegerChoices, metaclass=_IntegerChoicesMeta):
     dict_by_value: dict[int, IntegerChoices]
 
 
+TextChoices: Type[_TextChoices | TextChoices]
 IntegerChoices: Type[_IntegerChoices | IntegerChoices]

@@ -102,7 +102,9 @@ INSTALLED_APPS = [
     
     'app.base',
     'app.users',
-    'app.geo'
+    'app.geo',
+    'app.air',
+    'app.tickets'
 ]
 
 REST_FRAMEWORK = {

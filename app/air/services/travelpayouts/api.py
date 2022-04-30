@@ -5,7 +5,7 @@ import requests
 from django.conf import settings
 from travelpayouts import Client, common, flights
 
-from app.air.models.choices import FlightClassChoices
+from app.air.models.choices import FlightClass
 from app.air.services.travelpayouts.types import *
 from app.base.exceptions import CriticalError
 
@@ -40,7 +40,7 @@ class TravelpayoutsService(Client):
     
     def search(
         self, host: str, user_ip: str, trips: list[TripType],
-        flight_class: FlightClassChoices
+        flight_class: FlightClass
     ) -> str:
         segments: list = deepcopy(trips)
         for segment in segments:
