@@ -4,33 +4,35 @@ from app.base.models.base import AbstractModel
 
 
 class Ticket(AbstractModel):
-    sign = models.TextField(unique=True)
+    sign = models.TextField()
     best_offer = models.ForeignKey(
         'tickets.Offer', on_delete=models.SET_NULL, null=True, blank=True,
-        related_name='ticket_by_best_offer'
+        related_name='tickets_by_best_offer', related_query_name='ticket_by_best_offer'
     )
-    query = models.ForeignKey('air.Query', on_delete=models.PROTECT)
+    query = models.ForeignKey(
+        'air.Query', on_delete=models.PROTECT, related_name='tickets'
+    )
 
 
 class Trip(AbstractModel):
-    ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE)
-    number = models.PositiveSmallIntegerField()
+    ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE, related_name='trips')
+    number = models.PositiveSmallIntegerField(
+        help_text='Порядковый номер в сложном маршруте'
+    )
     origin = models.ForeignKey(
-        'geo.City', on_delete=models.CASCADE, related_name='trip_by_origin'
+        'geo.City', on_delete=models.CASCADE, related_name='trips_by_origin',
+        related_query_name='trip_by_origin'
     )
     destination = models.ForeignKey(
-        'geo.City', on_delete=models.CASCADE, related_name='trip_by_destination'
+        'geo.City', on_delete=models.CASCADE, related_name='trips_by_destination',
+        related_query_name='trip_by_destination'
     )
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
-    transfer_time = models.IntegerField()
-    transfer_airports = models.ManyToManyField(
-        'geo.Airport', related_name='trip_by_transfer_airports'
-    )
 
 
 class Offer(AbstractModel):
-    ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE)
+    ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE, related_name='offers')
     gate_id = models.IntegerField()
     title = models.TextField()
     price = models.FloatField()
@@ -41,17 +43,21 @@ class Offer(AbstractModel):
 
 
 class Segment(AbstractModel):
-    trip = models.ForeignKey(Trip, on_delete=models.CASCADE)
+    trip = models.ForeignKey(Trip, on_delete=models.CASCADE, related_name='segments')
     departure = models.ForeignKey(
-        'geo.Airport', on_delete=models.CASCADE, related_name='segment_by_departure'
+        'geo.Airport', on_delete=models.CASCADE, related_name='segments_by_departure',
+        related_query_name='segment_by_departure'
     )
     arrival = models.ForeignKey(
-        'geo.Airport', on_delete=models.CASCADE, related_name='segment_by_arrival'
+        'geo.Airport', on_delete=models.CASCADE, related_name='segments_by_arrival',
+        related_query_name='segment_by_arrival'
+    )
+    marketing_airline = models.ForeignKey(
+        'geo.Airline', on_delete=models.CASCADE, related_name='segments'
     )
     departure_time = models.DateTimeField()
     arrival_time = models.DateTimeField()
     duration = models.DurationField()
-    marketing_airline = models.ForeignKey('geo.Airline', on_delete=models.CASCADE)
     flight = models.TextField()
     handbags_weight = models.PositiveSmallIntegerField(null=True, blank=True)
     baggage_weight = models.PositiveSmallIntegerField(null=True, blank=True)
@@ -59,7 +65,9 @@ class Segment(AbstractModel):
 
 class About(AbstractModel):
     segment = models.OneToOneField(Segment, on_delete=models.CASCADE)
-    airline = models.ForeignKey('geo.Airline', on_delete=models.CASCADE)
+    airline = models.ForeignKey(
+        'geo.Airline', on_delete=models.CASCADE, related_name='abouts'
+    )
     aircraft = models.TextField(null=True, blank=True)
     food = models.BooleanField(null=True, blank=True)
     entertainment = models.BooleanField(null=True, blank=True)

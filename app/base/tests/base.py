@@ -2,15 +2,10 @@ from typing import Type
 
 from django.db import models
 from django.forms import model_to_dict
-from faker import Faker
 from rest_framework.test import APITestCase
-
-from app.base.tests._protocols import FakeProtocol
 
 
 class BaseTest(APITestCase):
-    fake: FakeProtocol = Faker()
-    
     assert_equal = APITestCase.assertEqual
     assert_contains = APITestCase.assertContains
     assert_in = APITestCase.assertIn

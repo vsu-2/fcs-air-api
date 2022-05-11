@@ -3,13 +3,12 @@ from functools import partial
 from django.contrib.auth.hashers import check_password
 from parameterized import parameterized
 
+from app.base.tests.fakers import fake
 from app.base.tests.views.base import BaseViewTest
 from app.users.models import User
 from app.users.models.choices import UserType
 from app.users.serializers.register import PostUsersRegisterSerializer
 from app.users.tests.factories.users import UserFactory
-
-fake = BaseViewTest.fake
 
 
 class UsersRegisterTest(BaseViewTest):
@@ -42,16 +41,15 @@ class UsersRegisterTest(BaseViewTest):
                     'is_active': False, 'type': UserType.DEFAULT.value,
                     'first_name': data.get('first_name'),
                     'last_name': data.get('last_name')
-                },
-                id=id
+                }, id=id
             )
         
         self._test('post', {'id': check_id}, data)
     
     def test_post_warn_409(self):
-        email = self.fake.email()
+        email = fake.email()
         UserFactory(email=email)
         self._test_api_exception(
             'post', PostUsersRegisterSerializer.WARNINGS[409],
-            {'email': email, 'password': self.fake.password()}
+            {'email': email, 'password': fake.password()}
         )
