@@ -11,9 +11,9 @@ class Query(AbstractModel):
 class QueryTrip(AbstractModel):
     query = models.ForeignKey(Query, on_delete=models.CASCADE)
     origin = models.ForeignKey(
-        'geo.City', on_delete=models.CASCADE, related_name='querytrip_by_origin'
+        'geo.City', on_delete=models.CASCADE, related_name='querytrips_by_origin'
     )
     destination = models.ForeignKey(
-        'geo.City', on_delete=models.CASCADE, related_name='querytrip_by_destination'
+        'geo.City', on_delete=models.CASCADE, related_name='querytrips_by_destination'
     )
     date = models.DateField()

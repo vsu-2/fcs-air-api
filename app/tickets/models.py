@@ -4,28 +4,26 @@ from app.base.models.base import AbstractModel
 
 
 class Ticket(AbstractModel):
-    sign = models.TextField()
-    best_offer = models.ForeignKey(
-        'tickets.Offer', on_delete=models.SET_NULL, null=True, blank=True,
-        related_name='tickets_by_best_offer', related_query_name='ticket_by_best_offer'
-    )
     query = models.ForeignKey(
         'air.Query', on_delete=models.PROTECT, related_name='tickets'
     )
+    best_offer = models.ForeignKey(
+        'tickets.Offer', on_delete=models.SET_NULL, null=True, blank=True,
+        related_name='tickets_by_best_offer'
+    )
+    sign = models.TextField()
 
 
 class Trip(AbstractModel):
     ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE, related_name='trips')
-    number = models.PositiveSmallIntegerField(
-        help_text='Порядковый номер в сложном маршруте'
-    )
     origin = models.ForeignKey(
-        'geo.City', on_delete=models.CASCADE, related_name='trips_by_origin',
-        related_query_name='trip_by_origin'
+        'geo.City', on_delete=models.CASCADE, related_name='trips_by_origin'
     )
     destination = models.ForeignKey(
-        'geo.City', on_delete=models.CASCADE, related_name='trips_by_destination',
-        related_query_name='trip_by_destination'
+        'geo.City', on_delete=models.CASCADE, related_name='trips_by_destination'
+    )
+    number = models.PositiveSmallIntegerField(
+        help_text='Порядковый номер в сложном маршруте'
     )
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
@@ -45,12 +43,10 @@ class Offer(AbstractModel):
 class Segment(AbstractModel):
     trip = models.ForeignKey(Trip, on_delete=models.CASCADE, related_name='segments')
     departure = models.ForeignKey(
-        'geo.Airport', on_delete=models.CASCADE, related_name='segments_by_departure',
-        related_query_name='segment_by_departure'
+        'geo.Airport', on_delete=models.CASCADE, related_name='segments_by_departure'
     )
     arrival = models.ForeignKey(
-        'geo.Airport', on_delete=models.CASCADE, related_name='segments_by_arrival',
-        related_query_name='segment_by_arrival'
+        'geo.Airport', on_delete=models.CASCADE, related_name='segments_by_arrival'
     )
     marketing_airline = models.ForeignKey(
         'geo.Airline', on_delete=models.CASCADE, related_name='segments'

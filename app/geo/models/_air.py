@@ -5,10 +5,7 @@ from app.geo.models.base import _AbstractGeoModel
 
 
 class Airport(_AbstractGeoModel):
-    city = models.ForeignKey(
-        City, on_delete=models.CASCADE, related_name='airports',
-        # related_query_name='airport'
-    )
+    city = models.ForeignKey(City, on_delete=models.CASCADE, related_name='airports')
 
 
 class Airline(_AbstractGeoModel):

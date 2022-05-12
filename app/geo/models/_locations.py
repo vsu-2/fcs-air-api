@@ -8,4 +8,4 @@ class Country(_AbstractGeoModel):
 
 
 class City(_AbstractGeoModel):
-    country = models.ForeignKey(Country, on_delete=models.CASCADE)
+    country = models.ForeignKey(Country, on_delete=models.CASCADE, related_name='cities')
