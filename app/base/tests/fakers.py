@@ -8,6 +8,13 @@ class SubFaker(_Faker):
     first_name: Callable[..., str]
     last_name: Callable[..., str]
     password: Callable[..., str]
+    email: Callable[..., str]
+    
+    def random_string(self, length: int = 10):
+        letters_count = self.random_int(max=length)
+        letters = self.random_letters(letters_count)
+        numbers = [str(self.random_digit()) for _ in range(length - letters_count)]
+        return ''.join(self.random_elements(letters + numbers, length, True))
 
 
 class Faker(_FactoryFaker):

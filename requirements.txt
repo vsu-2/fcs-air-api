@@ -27,8 +27,7 @@ whitenoise==6.0.0
 celery==5.0.2  # https://github.com/celery/celery/issues/6819
 gevent==21.12.0
 tzdata==2022.1
-requests==2.26.0
-git+https://github.com/jokerinteractive/travelpayouts-python#egg=travelpayouts
+dataclass-type-validator==0.1.2
 
 # dev
 django-debug-toolbar==3.2.4

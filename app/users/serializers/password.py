@@ -5,7 +5,7 @@ from app.base.exceptions import APIWarning
 from app.base.schemas.mixins import SerializerSchemaMixin
 
 
-class PostUsersPasswordSerializer(serializers.ModelSerializer):
+class POST_UsersPasswordSerializer(serializers.ModelSerializer):
     WARNINGS = {
         404: APIWarning(
             'Пользователя с таким email не существует', 404,
@@ -24,13 +24,16 @@ class PostUsersPasswordSerializer(serializers.ModelSerializer):
         return attrs
 
 
-class PutUsersPasswordSerializer(SerializerSchemaMixin, serializers.ModelSerializer):
+class PUT_UsersPasswordSerializer(SerializerSchemaMixin, serializers.ModelSerializer):
     WARNINGS = {408: APIWarning('Сессия просрочена', 408, 'password_session_time_out')}
     
-    session = serializers.CharField(write_only=True)
+    session_id = serializers.CharField(write_only=True)
     token = serializers.CharField(read_only=True)
     
     class Meta:
         model = User
-        extra_kwargs = {'session': {}, 'password': {'write_only': True}, 'token': {}}
+        extra_kwargs = {
+            'session_id': {}, 'new_password': {'write_only': True, 'source': 'password'},
+            'token': {}
+        }
         fields = list(extra_kwargs.keys())

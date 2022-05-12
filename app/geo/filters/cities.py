@@ -18,7 +18,7 @@ class GeoCitiesFilterSet(BaseFilterSet):
     @staticmethod
     def filter_title__icontains(queryset, name, value):
         _name = f'{name.split("__")[0]}__{name.split("__")[1]}'
-        return queryset.filter(Q(**{_name: value}) | Q(**{f'airport__{_name}': value}))
+        return queryset.filter(Q(**{_name: value}) | Q(**{f'airports__{_name}': value}))
     
     def filter_queryset(self, queryset):
         queryset = super().filter_queryset(queryset)

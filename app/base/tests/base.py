@@ -44,10 +44,19 @@ class BaseTest(APITestCase):
     ):
         match model:
             case type():
-                self.assert_model(model.objects, instance_data, **filters)
+                return self.assert_model(model.objects, instance_data, **filters)
             case models.Manager():
-                self.assert_model(model.all(), instance_data, **filters)
+                return self.assert_model(model.all(), instance_data, **filters)
             case models.QuerySet():
-                self.assert_model(model.filter(**filters or {}).get(), instance_data)
+                try:
+                    return self.assert_model(
+                        model.filter(**filters or {}).get(), instance_data
+                    )
+                except model.model.DoesNotExist:
+                    self.fail(
+                        f'{model.model.__name__} matching query ({filters}) does not '
+                        f'exists'
+                    )
             case _:
                 self.assert_instance(model, instance_data)
+        return model

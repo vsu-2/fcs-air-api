@@ -22,6 +22,7 @@ env = environ.Env(
     SITE_NAME=(str, 'dev'),
     WEB_DOMAIN=(str, 'local.dev'),
     API_DOMAIN=(str, 'api.local.dev'),
+    SECRET_KEY=(str, 'secret'),
     DEBUG=(bool, True),
     TEST=(bool, False),
     ANON_THROTTLE_RATE=(str, '1000/s'),
@@ -49,7 +50,8 @@ env = environ.Env(
     LOG_LEVEL=(dict, {}),
     CELERY_REDIS_MAX_CONNECTIONS=(int, 10),
     ADMINS=(_env_value, {}),
-    TRAVELPAYOUTS_MARKER=int
+    TRAVELPAYOUTS_MARKER=int,
+    CLOUDINARY_URL=(str, None)
 )
 
 # root
@@ -73,8 +75,8 @@ DOMAIN = WEB_DOMAIN
 # django
 
 SECRET_KEY = env('SECRET_KEY')
-TEST = env('TEST')
 DEBUG = env('DEBUG')
+TEST = env('TEST')
 
 INSTALLED_APPS = [
     'django.contrib.auth',
@@ -102,8 +104,8 @@ INSTALLED_APPS = [
     
     'app.base',
     'app.users',
-    'app.geo',
     'app.air',
+    'app.geo',
     'app.tickets'
 ]
 
@@ -264,7 +266,8 @@ MEDIA_URL = '/media/'
 DATA_UPLOAD_MAX_MEMORY_SIZE = None
 
 CLOUDINARY_URL = env('CLOUDINARY_URL')
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+if CLOUDINARY_URL:
+    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 # static
 
