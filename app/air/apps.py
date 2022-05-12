@@ -1,6 +1,5 @@
-from django.apps import AppConfig
+from app.base.apps.base import BaseApp
 
 
-class AirConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
+class AirConfig(BaseApp):
     name = 'app.air'

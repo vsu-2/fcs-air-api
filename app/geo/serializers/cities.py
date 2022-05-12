@@ -3,21 +3,21 @@ from rest_framework import serializers
 from app.geo.models import Airport, City, Country
 
 
-class _GETGeoCitiesCountrySerializer(serializers.ModelSerializer):
+class _GET_GeoCities__CountrySerializer(serializers.ModelSerializer):
     class Meta:
         model = Country
         fields = ['id', 'title', 'code']
 
 
-class _GETGeoCitiesAirportSerializer(serializers.ModelSerializer):
+class _GET_GeoCities__AirportsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Airport
         fields = ['id', 'title', 'code']
 
 
-class GETGeoCitiesSerializer(serializers.ModelSerializer):
-    country = _GETGeoCitiesCountrySerializer()
-    airports = _GETGeoCitiesAirportSerializer(many=True, source='airport_set')
+class GET_GeoCitiesSerializer(serializers.ModelSerializer):
+    country = _GET_GeoCities__CountrySerializer()
+    airports = _GET_GeoCities__AirportsSerializer(many=True)
     
     class Meta:
         model = City
