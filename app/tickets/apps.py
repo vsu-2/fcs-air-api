@@ -1,5 +1,5 @@
-from django.apps import AppConfig
+from app.base.apps.base import BaseApp
 
 
-class TicketsConfig(AppConfig):
+class TicketsConfig(BaseApp):
     name = 'app.tickets'

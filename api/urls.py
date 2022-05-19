@@ -18,6 +18,7 @@ urlpatterns = [
     path('base/', include('app.base.urls')),
     path('users/', include('app.users.urls')),
     path('geo/', include('app.geo.urls')),
+    path('tickets/', include('app.tickets.urls')),
     
     *static(settings.STATIC_URL, document_root=settings.STATIC_ROOT),
     *static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

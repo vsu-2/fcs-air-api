@@ -47,7 +47,7 @@ class TravelpayoutsService(Client):
             segment['date'] = segment['date'].isoformat()
         return flights.search(
             self, segments=segments, passengers={'adults': 1}, currency='rub',
-            user_ip=user_ip, host=host, trip_class=flight_class.lower(), locale='ru'
+            user_ip=user_ip, host=host, trip_class=flight_class.upper(), locale='ru'
         )['search_id']
     
     def search_results(self, search_id: str) -> list[dict]:

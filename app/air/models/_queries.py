@@ -5,15 +5,16 @@ from app.base.models.base import AbstractModel
 
 
 class Query(AbstractModel):
-    flight_class = models.PositiveSmallIntegerField(choices=FlightClass.choices)
+    passengers = models.IntegerField()
+    flight_class = models.TextField(choices=FlightClass.choices)
 
 
 class QueryTrip(AbstractModel):
-    query = models.ForeignKey(Query, on_delete=models.CASCADE)
+    query = models.ForeignKey(Query, on_delete=models.CASCADE, related_name='trips')
     origin = models.ForeignKey(
-        'geo.City', on_delete=models.CASCADE, related_name='querytrips_by_origin'
+        'geo.City', on_delete=models.CASCADE, related_name='query_trips_by_origin'
     )
     destination = models.ForeignKey(
-        'geo.City', on_delete=models.CASCADE, related_name='querytrips_by_destination'
+        'geo.City', on_delete=models.CASCADE, related_name='query_trips_by_destination'
     )
     date = models.DateField()

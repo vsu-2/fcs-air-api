@@ -24,7 +24,7 @@ class GET_UsersPasswordController(BaseController):
         email: str
         code: str
     
-    def dataclass(self) -> _dataclass | None:
+    def dto(self) -> _dataclass | None:
         query_params = self.view.request.query_params
         try:
             return self._dataclass(
@@ -45,10 +45,10 @@ class POST_UsersPasswordController(BaseController):
     
     @dataclass_validate
     @dataclasses.dataclass
-    class dataclass:
+    class dto:
         email: str
     
-    def control(self, data: dataclass):
+    def control(self, data: dto):
         self.email_verification.send(
             BaseEmailMessage(
                 request=self.view.request, template_name='users/password.html',
@@ -63,11 +63,11 @@ class PUT_UsersPasswordController(BaseController):
     
     @dataclass_validate
     @dataclasses.dataclass
-    class dataclass:
+    class dto:
         session_id: str
         password: str
     
-    def control(self, data: dataclass):
+    def control(self, data: dto):
         if (email := self.password_session.check(data.session_id)) is None:
             raise self.view.serializer.WARNINGS[408]
         user = User.objects.get(email=email)

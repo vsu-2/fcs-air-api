@@ -19,7 +19,6 @@ class PUT_UsersMePasswordSerializer(SerializerSchemaMixin, serializers.ModelSeri
     def validate(self, attrs):
         user = self.instance
         validate_password(attrs['new_password'])
-        print(user.check_password(attrs['old_password']))
         if not user.check_password(attrs['old_password']):
             raise self.WARNINGS[403]
         return attrs
