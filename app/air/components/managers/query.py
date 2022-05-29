@@ -1,10 +1,10 @@
 from django.db.models import Count, Prefetch
 
-from app.air.models import Query, QueryTrip
 from app.air.components.entities.query import QueryEntity, QueryTripEntity
+from app.air.models import Query, QueryTrip
 
 
-class QueryFactory:
+class QueryManager:
     def create(self, query_entity: QueryEntity) -> Query:
         if query := self.get(query_entity):
             return query
@@ -22,7 +22,7 @@ class QueryFactory:
         ).prefetch_related(Prefetch('trips', QueryTrip.objects.order_by('date')))
         for applicant in applicants:
             is_next_applicant = False
-            for trip, applicant_trip in zip(query_entity.trips, applicant.trips):
+            for trip, applicant_trip in zip(query_entity.trips, applicant.trips.all()):
                 if trip != QueryTripEntity.from_model(applicant_trip):
                     is_next_applicant = True
                     break

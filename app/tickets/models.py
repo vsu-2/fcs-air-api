@@ -55,8 +55,6 @@ class Segment(AbstractModel):
     arrival_time = models.DateTimeField()
     duration = models.DurationField()
     flight = models.TextField()
-    handbags_weight = models.PositiveSmallIntegerField(null=True, blank=True)
-    baggage_weight = models.PositiveSmallIntegerField(null=True, blank=True)
 
 
 class About(AbstractModel):

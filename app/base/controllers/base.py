@@ -7,7 +7,7 @@ class BaseController:
     def __init__(self, view: 'base.BaseView'):
         self.view: Final[base.BaseView] = view
         for service_name, service_class in getattr(self, '__annotations__', {}).items():
-            if any(map(service_class.__name__.endswith, ['Service', 'Factory'])):
+            if any(map(service_class.__name__.endswith, ['Service', 'Manager'])):
                 if (service_args := getattr(self, service_name, None)) is None:
                     setattr(self, service_name, service_class())
                 else:

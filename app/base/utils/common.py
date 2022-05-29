@@ -35,3 +35,10 @@ def response_204(f):
         return Response(status=204)
     
     return extend_schema(responses={201: None, 204: ''})(_f_decorator)
+
+
+def get_ip_from_request(request) -> str:
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        return x_forwarded_for.split(',')[0]
+    return request.META.get('REMOTE_ADDR')
