@@ -326,7 +326,7 @@ _loggers = {
     } for k, v in env('LOG_CONF').items()
 }
 for k, v in env('LOG_LEVEL').items():
-    _loggers.setdefault(k, {})['level'] = v
+    _loggers.setdefault(k, {})['level'] = 'DEBUG' if TEST else v
 
 LOGGING = LogConfig(_loggers).to_dict()
 

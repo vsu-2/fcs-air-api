@@ -1,10 +1,5 @@
-import factory
-
-from app.air.tests.factiories import QueryFactory
-from app.base.tests.factories.base import BaseFactory
-from app.base.tests.fakers import Faker
-from app.geo.tests.factories import AirlineFactory
-from app.geo.tests.factories.locations import CityFactory
+from app.air.tests.factiories import *
+from app.geo.tests.factories import *
 from app.tickets.models import *
 
 
@@ -18,7 +13,8 @@ class TicketFactory(BaseFactory):
     @classmethod
     def _create(cls, model_class, *args, **kwargs):
         ticket = super()._create(model_class, *args, **kwargs)
-        ticket.best_offer = OfferFactory()
+        ticket.best_offer = OfferFactory(ticket=ticket)
+        ticket.save()
         return ticket
 
 
@@ -47,8 +43,8 @@ class OfferFactory(BaseFactory):
 
 class SegmentFactory(BaseFactory):
     trip = factory.SubFactory(TripFactory)
-    departure = factory.SubFactory(CityFactory)
-    arrival = factory.SubFactory(CityFactory)
+    departure = factory.SubFactory(AirportFactory)
+    arrival = factory.SubFactory(AirportFactory)
     marketing_airline = factory.SubFactory(AirlineFactory)
     departure_time = Faker('future_datetime')
     arrival_time = Faker('future_datetime')

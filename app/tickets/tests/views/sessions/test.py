@@ -8,8 +8,8 @@ from app.geo.tests.factories import CityFactory
 from app.tickets.components.services.search import SearchTicketsService
 
 
-class TicketsSessionTest(BaseViewTest):
-    path = '/tickets/session/'
+class TicketsSessionsTest(BaseViewTest):
+    path = '/tickets/sessions/'
     
     me_data = None
     

@@ -4,7 +4,7 @@ from django.core.management.base import BaseCommand
 from django.db.models import Count
 
 from app.air.services.travelpayouts import TravelpayoutsService
-from app.geo.models import Country, City, Airport, Airline
+from app.geo.models import Airline, Airport, City, Country
 
 
 def _update_or_create(model, code, data):
@@ -46,7 +46,7 @@ class Command(BaseCommand):
                 self._import_airports()
             if 'airline' in imports:
                 self._import_airlines()
-        City.objects.annotate(Count('airport')).filter(airport__count=0).delete()
+        City.objects.annotate(Count('airports')).filter(airports__count=0).delete()
     
     def add_arguments(self, parser):
         parser.add_argument(

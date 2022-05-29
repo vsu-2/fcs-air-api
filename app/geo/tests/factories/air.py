@@ -21,4 +21,3 @@ class AirlineFactory(BaseFactory):
     
     code = Faker('country_code')
     title = Faker('company')
-    city = factory.SubFactory(CityFactory)

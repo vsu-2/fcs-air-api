@@ -5,7 +5,7 @@ from app.tickets.components.services.session import TicketsSessionService
 from app.tickets.tasks import search_tickets
 
 
-class POST_TicketsSessionController(BaseController):
+class POST_TicketsSessionsController(BaseController):
     query_manager: QueryManager
     
     dto = QueryEntity

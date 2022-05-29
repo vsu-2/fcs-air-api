@@ -27,6 +27,7 @@ class Trip(AbstractModel):
     )
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
+    duration = models.DurationField()
 
 
 class Offer(AbstractModel):

@@ -221,29 +221,6 @@ def _create_segment(trip, raw_segment, flight_info):
     _create_about(flight_info, raw_segment, segment)
 
 
-def _parse_travel_time(segments):
-    travel_time = 0
-    prev = segments[0]
-    for curr in segments[1:]:
-        travel_time += (_parse_time(
-            curr['departure_date'], curr['departure_time']
-        ) - _parse_time(prev['arrival_date'], prev['arrival_time'])).total_seconds()
-    return travel_time
-
-
-def _parse_transfer_airports(segments):
-    cities = set()
-    if len(segments) == 1:
-        return cities
-    last_i = len(segments) - 1
-    for i, segment in enumerate(segments):
-        if i > 0:
-            cities.add(Airport.objects.get(code=segment['departure']))
-        if i < last_i:
-            cities.add(Airport.objects.get(code=segment['arrival']))
-    return cities
-
-
 def _parse_trip_duration(segments):
     duration = 0
     prev_segment = None
@@ -264,7 +241,7 @@ def _parse_trip_duration(segments):
 def _create_trips(ticket, query_trips, proposal_trips, flight_info):
     assert len(query_trips) == len(proposal_trips)
     for trip_index, segments in enumerate(proposal_trips):
-        query_trip: QueryTrip = query_trips[trip_index]
+        query_trip = query_trips[trip_index]
         trip = Trip.objects.create(
             ticket=ticket, origin=query_trip.origin,
             destination=query_trip.destination,
@@ -273,10 +250,8 @@ def _create_trips(ticket, query_trips, proposal_trips, flight_info):
             ),
             end_time=_parse_time(
                 segments[-1]['arrival_date'], segments[-1]['arrival_time']
-            ), transfer_time=_parse_travel_time(segments), number=trip_index,
-            duration=_parse_trip_duration(segments)
+            ), number=trip_index, duration=_parse_trip_duration(segments)
         )
-        trip.transfer_airports.add(*_parse_transfer_airports(segments))
         for segment_index, segment in enumerate(segments):
             _create_segment(trip, segment, flight_info)
 
