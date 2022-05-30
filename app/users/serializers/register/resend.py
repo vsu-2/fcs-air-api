@@ -1,10 +1,13 @@
 from rest_framework import serializers
 
 from app.base.exceptions import APIWarning
+from app.base.schemas.mixins import SerializerSchemaMixin
 from app.users.models import User
 
 
-class POST_UsersRegisterResendSerializer(serializers.ModelSerializer):
+class POST_UsersRegisterResendSerializer(
+    SerializerSchemaMixin, serializers.ModelSerializer
+):
     WARNINGS = {
         404: APIWarning(
             'Пользователь с таким email не регистрировался', 404,
