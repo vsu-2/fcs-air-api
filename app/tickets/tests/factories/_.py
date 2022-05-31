@@ -25,6 +25,7 @@ class TripFactory(BaseFactory):
     number = Faker('random_int', max=5)
     start_time = Faker('future_datetime')
     end_time = Faker('future_datetime')
+    duration = Faker('time_delta')
     
     class Meta:
         model = Trip

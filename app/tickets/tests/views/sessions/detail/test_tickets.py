@@ -6,12 +6,12 @@ from app.tickets.components.services.session import TicketsSessionService
 from app.tickets.tests.factories import AboutFactory
 
 
-class TicketsSessions_SessionId_Test(BaseViewTest):
+class TicketsSessionsDetailTicketsTest(BaseViewTest):
     _session_id: str = fake.random_string()
     
     @property
     def path(self):
-        return f'/tickets/sessions/{self._session_id}/'
+        return f'/tickets/sessions/{self._session_id}/tickets/'
     
     me_data = None
     

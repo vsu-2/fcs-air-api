@@ -7,20 +7,20 @@ from app.base.views.base import BaseView
 from app.tickets.components.services.session import TicketsSessionService
 
 
-class BaseTicketsSessionsView(ViewSchemaMixin, BaseView):
+class BaseTicketsSessionsDetailView(ViewSchemaMixin, BaseView):
     WARNINGS = {
         408: APIWarning('Время жизни сессии закончилось', 408, 'tickets_session_timeout')
     }
     
     @property
     def session(self) -> TicketsSessionService:
-        session = TicketsSessionService(self.kwargs['session_id'])
+        session = TicketsSessionService(self.kwargs['id'])
         if session.task_id is None:
             raise self.WARNINGS[408]
         return session
     
     @property
-    def _is_in_progress(self) -> bool:
+    def is_in_progress(self) -> bool:
         task_id = self.session.task_id
         result = AsyncResult(task_id)
         result_status = result.status

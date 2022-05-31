@@ -184,14 +184,14 @@ def _parse_convenience(amenities, convenience):
     return True
 
 
-def _create_about(flight_info, raw_segment, segment):
-    flight_class = FlightClass(raw_segment['trip_class'])
-    airline = Airline.objects.get(code=raw_segment['operating_carrier'])
+def _create_about(flight_info, segment_data, segment):
+    flight_class = FlightClass(segment_data['trip_class'])
+    airline = Airline.objects.get(code=segment_data['operating_carrier'])
     amenities = flight_info.get(
-        f'{flight_class.name}{airline.code}{raw_segment["number"]}', {}
+        f'{flight_class.name}{airline.code}{segment_data["number"]}', {}
     ).get('amenities')
     About.objects.create(
-        segment=segment, airline=airline, aircraft=raw_segment.get('aircraft', '') or '',
+        segment=segment, airline=airline, aircraft=segment_data.get('aircraft', '') or '',
         food=_parse_convenience(amenities, 'food'),
         entertainment=_parse_convenience(amenities, 'entertainment'),
         alcohol=_parse_convenience(amenities, 'alcohol'),
@@ -205,20 +205,21 @@ def _parse_time(date_, time):
     return datetime.fromisoformat(f'{date_}T{time}:00+00:00')
 
 
-def _create_segment(trip, raw_segment, flight_info):
-    carrier = raw_segment.get('marketing_carrier', raw_segment['operating_carrier'])
+def _create_segment(trip, segment_data, flight_info) -> Segment:
+    carrier = segment_data.get('marketing_carrier', segment_data['operating_carrier'])
     segment = Segment.objects.create(
-        trip=trip, departure=Airport.objects.get(code=raw_segment['departure']),
-        arrival=Airport.objects.get(code=raw_segment['arrival']),
+        trip=trip, departure=Airport.objects.get(code=segment_data['departure']),
+        arrival=Airport.objects.get(code=segment_data['arrival']),
         departure_time=_parse_time(
-            raw_segment['departure_date'], raw_segment['departure_time']
+            segment_data['departure_date'], segment_data['departure_time']
         ), arrival_time=_parse_time(
-            raw_segment['arrival_date'], raw_segment['arrival_time']
-        ), duration=timedelta(minutes=raw_segment['duration']),
+            segment_data['arrival_date'], segment_data['arrival_time']
+        ), duration=timedelta(minutes=segment_data['duration']),
         marketing_airline=Airline.objects.get(code=carrier),
-        flight=f'{carrier}-{raw_segment["number"]}'
+        flight=f'{carrier}-{segment_data["number"]}'
     )
-    _create_about(flight_info, raw_segment, segment)
+    _create_about(flight_info, segment_data, segment)
+    return segment
 
 
 def _parse_trip_duration(segments):
@@ -240,20 +241,33 @@ def _parse_trip_duration(segments):
 
 def _create_trips(ticket, query_trips, proposal_trips, flight_info):
     assert len(query_trips) == len(proposal_trips)
-    for trip_index, segments in enumerate(proposal_trips):
+    # нельзя просто найти разницу между временем вылета первого рейса и временем
+    # прибытия последнего рейса из-за разных часовых поясов в пунктах отправки и
+    # прибытия. Приходится учитывать каждый duration рейса отдельно
+    travel_time = timedelta()
+    for trip_index, segments_data in enumerate(proposal_trips):
         query_trip = query_trips[trip_index]
         trip = Trip.objects.create(
             ticket=ticket, origin=query_trip.origin,
             destination=query_trip.destination,
             start_time=_parse_time(
-                segments[0]['departure_date'], segments[0]['departure_time']
+                segments_data[0]['departure_date'], segments_data[0]['departure_time']
             ),
             end_time=_parse_time(
-                segments[-1]['arrival_date'], segments[-1]['arrival_time']
-            ), number=trip_index, duration=_parse_trip_duration(segments)
+                segments_data[-1]['arrival_date'], segments_data[-1]['arrival_time']
+            ), number=trip_index, duration=_parse_trip_duration(segments_data)
         )
-        for segment_index, segment in enumerate(segments):
-            _create_segment(trip, segment, flight_info)
+        # время самого перелёта
+        travel_time += trip.duration
+        
+        prev_segment: Segment | None = None
+        for segment_index, segment_data in enumerate(segments_data):
+            segment = _create_segment(trip, segment_data, flight_info)
+            if prev_segment:
+                # время ожидания между перелётами (время пересадки)
+                travel_time += segment.departure_time - prev_segment.arrival_time
+    ticket.travel_time = travel_time
+    ticket.save()
 
 
 def _parse_and_save_results(query, proposals, gates_info, flight_info):

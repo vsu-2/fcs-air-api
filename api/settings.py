@@ -7,12 +7,15 @@ from pathlib import Path
 
 # noinspection PyPackageRequirements
 import environ
+from faker import proxy
 from pybase64 import b64decode, b64encode
 
 from app.base.logs.configs import LogConfig
 
 base64.b64encode = b64encode
 base64.b64decode = b64decode
+
+setattr(proxy, '_UNIQUE_ATTEMPTS', 100_000_000)
 
 # env
 

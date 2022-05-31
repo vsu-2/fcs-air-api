@@ -12,6 +12,7 @@ class Ticket(AbstractModel):
         related_name='tickets_by_best_offer'
     )
     sign = models.TextField()
+    travel_time = models.DurationField(null=True, blank=True)
 
 
 class Trip(AbstractModel):

@@ -19,7 +19,8 @@ class TicketsSessionsTest(BaseViewTest):
         with mock.patch.object(SearchTicketsService, 'search'):
             self._test(
                 'post', {'session_id': lambda sid: isinstance(sid, str)}, {
-                    'passengers': query.passengers, 'trips': [
+                    'passengers': query.passengers, 'flight_class': query.flight_class,
+                    'trips': [
                         {
                             'origin': query_trip.origin.id,
                             'destination': query_trip.destination.id,

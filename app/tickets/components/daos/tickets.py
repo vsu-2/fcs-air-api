@@ -1,4 +1,4 @@
-from django.db.models import F, Prefetch, QuerySet
+from django.db.models import Prefetch, QuerySet
 
 from app.geo.models import Airport
 from app.tickets.models import *
@@ -21,4 +21,4 @@ class TicketsDao:
                     )
                 ).order_by('number')
             )
-        ).exclude(best_offer=None).annotate(best_price=F('best_offer__price')).nocache()
+        ).exclude(best_offer=None).nocache()

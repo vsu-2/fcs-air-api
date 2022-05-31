@@ -4,5 +4,6 @@ from .views import *
 
 urlpatterns = [
     path('sessions/', TicketsSessionsView.as_view()),
-    path('sessions/<str:session_id>/', TicketsSessions_SessionId_View.as_view()),
+    path('sessions/<str:id>/tickets/', TicketsSessionsDetailTicketsView.as_view()),
+    path('sessions/<str:id>/filters/', TicketsSessionsDetailFiltersView.as_view()),
 ]
