@@ -38,14 +38,14 @@ class TicketsSessionsDetailTicketsFilter(BaseFilterSet):
     def filter_transfers__in(queryset, _, value):
         return queryset.annotate(
             # ищем самое большое количество сегментов среди всех рейсов билета
-            max_segment_count=Subquery(
+            max_segments_count=Subquery(
                 Trip.objects.filter(ticket_id=OuterRef('id')).annotate(
-                    Count('segment')
-                ).order_by('-segment__count').values('segment__count')[:1]
+                    Count('segments')
+                ).order_by('-segments__count').values('segments__count')[:1]
             )
         ).filter(
             # сегментов всегда на 1 больше, чем пересадок
-            max_segment_count__in=map(lambda v: v + 1, value)
+            max_segments_count__in=map(lambda v: v + 1, value)
         )
     
     @staticmethod

@@ -1,5 +1,3 @@
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
 from rest_framework.mixins import ListModelMixin
 
 from app.tickets.components.daos.tickets import TicketsDao
@@ -13,7 +11,6 @@ class TicketsSessionsDetailTicketsView(ListModelMixin, BaseTicketsSessionsDetail
     pagination_class = TicketsSessions_SessionId_Pagination
     filterset_class = TicketsSessionsDetailTicketsFilter
     
-    @method_decorator(cache_page(2))
     def get(self, request, **_):
         return self.list(request)
     
