@@ -10,13 +10,12 @@ class GET_FavoritesSessionsDetailSerializer(BaseSerializer):
 
 class POST_FavoritesSessionsDetailSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
-    query = serializers.HiddenField(
-        default=lambda serializer_field: serializer_field.context['view'].session.query
-    )
+    query = serializers.HiddenField(default=None)
     
     class Meta:
         model = Favorite
         fields = ['id', 'user', 'query']
     
     def create(self, validated_data):
+        validated_data['query'] = self.context['view'].session.query
         return Favorite.objects.get_or_create(**validated_data)
