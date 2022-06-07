@@ -2,7 +2,7 @@ from rest_framework.mixins import ListModelMixin
 
 from app.users.filters import UsersFilterSet
 from app.users.models import User
-from app.users.views import BaseAuthView
+from app.users.views.base import BaseAuthView
 
 
 class UsersView(ListModelMixin, BaseAuthView):
