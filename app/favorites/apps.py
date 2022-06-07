@@ -1,6 +1,5 @@
-from django.apps import AppConfig
+from app.base.apps.base import BaseApp
 
 
-class FavoritesConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
+class FavoritesConfig(BaseApp):
     name = 'app.favorites'
