@@ -14,14 +14,14 @@ class FavoritesSessionsDetailView(
     permission_classes = [IsAuthenticatedPermission]
     queryset = Favorite.objects.all()
     
-    def get(self, request):
+    def get(self, request, **_):
         return self.handle()
-    
+
     @response_204
-    def post(self, request):
+    def post(self, request, **_):
         self.create(request)
-    
-    def delete(self, request):
+
+    def delete(self, request, **_):
         return self.destroy(request)
     
     def get_object(self):
