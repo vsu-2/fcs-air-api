@@ -109,7 +109,8 @@ INSTALLED_APPS = [
     'app.users',
     'app.air',
     'app.geo',
-    'app.tickets'
+    'app.tickets',
+    'app.favorites'
 ]
 
 REST_FRAMEWORK = {
@@ -202,7 +203,11 @@ CACHEOPS_DEFAULTS = {
 }
 CACHEOPS = {
     'authtoken.*': {},
-    'users.*': {}
+    'users.*': {},
+    'air.*': {},
+    'geo.*': {},
+    'tickets.*': {},
+    'favorites.*': {}
 }
 
 CACHEOPS_DEGRADE_ON_FAILURE = True
