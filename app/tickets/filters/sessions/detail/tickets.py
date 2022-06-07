@@ -138,4 +138,4 @@ class TicketsSessionsDetailTicketsFilter(BaseFilterSet):
     
     @staticmethod
     def filter_offers__in(queryset, _, value):
-        return queryset.filter(offer__gate_id__in=value)
+        return queryset.filter(offers__gate_id__in=value)
